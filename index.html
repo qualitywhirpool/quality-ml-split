@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QML SPLIT L09</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00AFFF;
+            --primary-hover: #57C8FF;
+            --container-bg: rgba(17, 25, 40, 0.7);
+            --card-bg: rgba(28, 37, 56, 0.7);
+            --card-hover-bg: rgba(38, 49, 70, 0.8);
+            --app-bg: #0A0C10;
+            --text-primary: #F0F4F8;
+            --text-secondary: #A0AEC0;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--app-bg);
+            margin: 0;
+            padding: 1rem;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+            position: relative;
+        }
+        .background-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(330deg, #0A0C10 50%, #111928 100%);
+        }
+        .background-gradient .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.4;
+            animation: move 25s infinite alternate ease-in-out;
+        }
+        .shape1 {
+            width: 400px;
+            height: 400px;
+            background: #00AFFF;
+            top: -80px;
+            left: -120px;
+        }
+        .shape2 {
+            width: 350px;
+            height: 350px;
+            background: #8A2BE2;
+            bottom: -100px;
+            right: -100px;
+            animation-duration: 20s;
+        }
+        @keyframes move {
+            from { transform: translateY(0px) rotate(0deg); }
+            to { transform: translateY(40px) rotate(45deg); }
+        }
+        .app-container {
+            max-width: 450px;
+            width: 100%;
+            height: 95dvh;
+            max-height: 880px;
+            background: var(--container-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 1rem 1.5rem;
+            flex-shrink: 0;
+            display: grid;
+            grid-template-columns: 44px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+        .header--scrolled {
+            background-color: rgba(17, 25, 40, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .app-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            justify-self: start;
+        }
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .header-whirlpool-logo {
+            height: 25px;
+            object-fit: contain;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            justify-self: end;
+        }
+        main {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
+            background: rgba(17, 25, 40, 0.3);
+        }
+        .main-button {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            padding: 1rem 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: var(--border-radius-md);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-button:hover {
+            transform: translateY(-3px);
+            background: var(--card-hover-bg);
+            box-shadow: 0 0 20px rgba(0, 175, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        .main-button .icon {
+            color: var(--primary-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .main-button:hover .icon {
+            color: var(--primary-hover);
+        }
+        .main-button .arrow-icon {
+            margin-left: auto;
+            color: var(--text-secondary);
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .main-button:hover .arrow-icon {
+            transform: translateX(5px);
+            color: var(--primary-color);
+        }
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            transition: all 0.25s ease-in-out;
+            padding: 0.85rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 0.75rem;
+            display: block;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 175, 255, 0.3);
+        }
+        .btn-custom:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 175, 255, 0.4);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 12, 16, 0.5); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--container-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            max-width: 90%;
+            width: 450px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+        }
+        .modal-overlay.visible .modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .modal-close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; 
+        }
+        .modal-category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        @keyframes slide-up-fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        main > div {
+            animation: slide-up-fade-in 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 12, 16, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .loading-overlay.visible { opacity: 1; visibility: visible; }
+        .loading-logo {
+            width: 100px;
+            height: 100px;
+            animation: pulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-gradient">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+    </div>
+    
+    <div class="app-container">
+        <header class="header" id="app-header">
+             <img src="https://raw.githubusercontent.com/higorbritowh/qml/refs/heads/main/WCM%20WRA%20(1).png"
+                  alt="Logo QC"
+                  class="app-logo"
+                  onerror="this.onerror=null; this.src='https://placehold.co/44x44/00AFFF/FFFFFF?text=QC&font=inter';">
+            <h1 class="header-title">QML SPLIT L09</h1>
+            <img src="https://www.whirlpoolcorp.com/content/dam/business-unit/whirlpoolcorp/wp-content/upload/logos/WhirlpoolBRAND-notR-2017Logo_2C_W.png" alt="Logo da Whirlpool" class="header-whirlpool-logo">
+        </header>
+
+        <main id="main-content">
+            <div><button type="button" class="main-button" data-modal-target="#modal-sm90"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>SM.90</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p10"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.10</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p140"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.140</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p150"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.150</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p170"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.170</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p180"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.180</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p30"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.30</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-p60"><span class="icon"><i class="fa-solid fa-box"></i></span><span>P.60</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-pt10"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>PT.10</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-pt30"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>PT.30</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-sm110"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>SM.110</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-sm60"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>SM.60</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-sm80"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>SM.80</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+            <div><button type="button" class="main-button" data-modal-target="#modal-pt50"><span class="icon"><i class="fa-solid fa-layer-group"></i></span><span>PT.50</span><i class="fas fa-chevron-right arrow-icon"></i></button></div>
+        </main>
+
+        <footer class="footer">
+            <p>Desenvolvido por Higor Brito</p>
+        </footer>
+    </div>
+
+    <div id="modal-sm90" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">SM.90</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20-%20SM90%20Parafusadeira%20pistola%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p10" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.10</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P10%20Parafusadeira%20Pistola%20Eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p140" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.140</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P140%20Parafusadeira%20Pistola%20Eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p150" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.150</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P150%20Parafusadeira%20pistola%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p170" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.170</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P170%20Parafusadeira%20pistola%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p180" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.180</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P180%20Parafusadeira%20pistola%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p30" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.30</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P30%20Sistema%20de%20vis%C3%A3o.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-p60" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">P.60</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20P60%20Parafusadeira%20Reta%20Eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-pt10" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">PT.10</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20PT10%20Parafusadeira%20Pistola%20Eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-pt30" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">PT.30</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20PT30%20Pistola%20de%20carga.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-sm110" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">SM.110</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20SM110%20Parafusadeira%20angular%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-sm60" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">SM.60</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20SM60%20Parafusadeira%20Reta%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação - Parafusadeira</a><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20SM60%20Sistema%20de%20vis%C3%A3o.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação - Sistema de Visão</a></div></section></div></div>
+    <div id="modal-sm80" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">SM.80</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Esta%C3%A7%C3%A3o%20-%20SM80%20Parafusadeira%20pistola%20eletr%C3%B4nica.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Estação</a></div></section></div></div>
+    <div id="modal-pt50" class="modal-overlay"><div class="modal"><header class="modal-header"><h2 class="modal-title">PT.50</h2><button class="modal-close-btn" data-modal-close>&times;</button></header><section class="modal-body"><div><h3 class="modal-category-title">Error Proofing</h3><a href="https://raw.githubusercontent.com/qualitywhirpool/quality-ml-split/refs/heads/main/Error%20Proofing%20Planta%20-%20PT50%20Hipot%20%20Jig%20de%20teste.png" class="btn-custom" role="button" target="_blank" rel="noopener noreferrer">Planta</a></div></section></div></div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <img src="https://raw.githubusercontent.com/higorbritowh/qml/refs/heads/main/WCM%20WRA%20(1).png"
+             alt="Logo QC Carregando"
+             class="loading-logo"
+             onerror="this.onerror=null; this.src='https://placehold.co/100x100/00AFFF/FFFFFF?text=QC&font=inter';">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainContent = document.getElementById('main-content');
+            const header = document.getElementById('app-header');
+            if (mainContent && header) {
+                mainContent.addEventListener('scroll', () => {
+                    if (mainContent.scrollTop > 10) {
+                        header.classList.add('header--scrolled');
+                    } else {
+                        header.classList.remove('header--scrolled');
+                    }
+                });
+            }
+            const modalTriggers = document.querySelectorAll('[data-modal-target]');
+            const linkButtons = document.querySelectorAll('.btn-custom');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            let openModal = null;
+            function openModalHandler(modal) {
+                if (!modal || modal.classList.contains('visible')) return;
+                modal.classList.add('visible');
+            }
+            function closeModalHandler() {
+                if (!openModal) return;
+                openModal.classList.remove('visible');
+                openModal = null;
+            }
+            modalTriggers.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.dataset.modalTarget;
+                    const modal = document.querySelector(modalId);
+                    if (modal) {
+                        openModal = modal;
+                        openModalHandler(modal);
+                    }
+                });
+            });
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) {
+                        closeModalHandler();
+                    }
+                });
+            });
+            document.querySelectorAll('[data-modal-close]').forEach(button => {
+                button.addEventListener('click', closeModalHandler);
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && openModal) {
+                    closeModalHandler();
+                }
+            });
+            linkButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const url = button.getAttribute('href');
+                    if (url && url !== "#") {
+                        event.preventDefault();
+                        loadingOverlay.classList.add('visible');
+                        setTimeout(() => {
+                            window.open(url, '_blank');
+                        }, 300);
+                    } else if (url === "#") {
+                        event.preventDefault();
+                        const originalText = button.textContent;
+                        button.style.cssText = 'background-color: #5f2120; border-color: #ff8f73; color: #ffaea8;';
+                        button.textContent = 'Link Indisponível';
+                        setTimeout(() => {
+                            button.style.cssText = '';
+                            button.textContent = originalText;
+                        }, 2000);
+                    }
+                });
+            });
+            function hideLoading() {
+                if (loadingOverlay.classList.contains('visible')) {
+                    loadingOverlay.classList.remove('visible');
+                }
+            }
+            window.addEventListener('pageshow', hideLoading);
+            window.addEventListener('focus', hideLoading);
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    hideLoading();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
